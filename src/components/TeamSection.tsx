@@ -11,6 +11,7 @@ import tanakaMakoniImg from "@/assets/team/tanaka-makoni.jpeg";
 import tenzingDorjiImg from "@/assets/team/tenzing-dorji.jpeg";
 import tonyMallenNtiadorImg from "@/assets/team/tony-mallen-ntiador.jpeg";
 import yurdanurYolcuImg from "@/assets/team/yurdanur-yolcu.jpeg";
+import gopeshBahetiImg from "@/assets/team/gopesh-baheti.jpg"
 
 const TeamSection = () => {
   const team = [
@@ -100,7 +101,7 @@ const TeamSection = () => {
       initials: "GB",
       linkedin: "https://linkedin.com",
       color: "bg-primary/32",
-      image: undefined,
+      image: gopeshBahetiImg,
     },
   ];
 
