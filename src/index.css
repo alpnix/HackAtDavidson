@@ -110,3 +110,36 @@ All colors MUST be HSL.
     @apply py-16 sm:py-20 md:py-32;
   }
 }
+
+#mlh-trust-badge {
+  position: fixed;
+  top: 16px;
+  left: 16px;
+  width: 80px;
+  max-width: 90px;
+  min-width: 60px;
+  z-index: 10000;
+  display: block;
+}
+
+#mlh-trust-badge img {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+@media (max-width: 1024px) {
+  #mlh-trust-badge {
+    top: 14px;
+    left: 14px;
+    width: 72px;
+  }
+}
+
+@media (max-width: 640px) {
+  #mlh-trust-badge {
+    top: 12px;
+    left: 12px;
+    width: 64px;
+  }
+}
