@@ -16,9 +16,13 @@ import mlh from "@/assets/sponsors/mlh.png";
 import davidsonCollege from "@/assets/sponsors/davidson-college.png";
 import nord from "@/assets/sponsors/nord.png";
 import cloudflare from "@/assets/sponsors/cloudflare.png";
+import elevenlabs from "@/assets/sponsors/elevenlabs.svg";
+import mobbin from "@/assets/sponsors/mobbin.png";
+import pcbway from "@/assets/sponsors/pcbway.png";
 
 const sponsors = [
   { name: "Precisely", logo: precisely },
+  { name: "ElevenLabs", logo: elevenlabs },
   { name: "Fidelity Investments", logo: fidelity },
   { name: "The Hurt Hub @ Davidson", logo: hurtHub },
   { name: "Starknet", logo: starknet },
@@ -31,6 +35,8 @@ const sponsors = [
   { name: "Kintone", logo: kintone },
   { name: "StandOut Stickers", logo: standoutStickers },
   { name: "Major League Hacking", logo: mlh },
+  { name: "Mobbin", logo: mobbin },
+  { name: "PCBWay", logo: pcbway },
   { name: "Davidson College", logo: davidsonCollege },
   { name: "Nord", logo: nord },
   { name: "Cloudflare", logo: cloudflare },
