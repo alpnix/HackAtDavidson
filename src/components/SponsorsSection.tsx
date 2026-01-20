@@ -11,7 +11,7 @@ import fidelity from "@/assets/sponsors/fidelity.png";
 import starknet from "@/assets/sponsors/starknet.png";
 import godaddy from "@/assets/sponsors/godaddy.png";
 import kintone from "@/assets/sponsors/kintone.png";
-import standoutStickers from "@/assets/sponsors/standout-stickers.png";
+import pureButtons from "@/assets/sponsors/pure-buttons.png";
 import mlh from "@/assets/sponsors/mlh.png";
 import davidsonCollege from "@/assets/sponsors/davidson-college.png";
 import nord from "@/assets/sponsors/nord.png";
@@ -33,7 +33,7 @@ const sponsors = [
   { name: "Summit Coffee", logo: summitCoffee },
   { name: "GoDaddy Registry", logo: godaddy },
   { name: "Kintone", logo: kintone },
-  { name: "StandOut Stickers", logo: standoutStickers },
+  { name: "Pure Buttons", logo: pureButtons },
   { name: "Major League Hacking", logo: mlh },
   { name: "Mobbin", logo: mobbin },
   { name: "PCBWay", logo: pcbway },
