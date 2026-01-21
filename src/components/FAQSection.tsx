@@ -6,10 +6,28 @@ import {
 } from "@/components/ui/accordion";
 
 const FAQSection = () => {
-  const faqs = [
+  const faqs: { question: string; answer: React.ReactNode }[] = [
     {
       question: "Who can participate?",
       answer: "Hack@Davidson is open to everyone! Whether you're a seasoned hacker or writing your first line of code, you're welcome here. We encourage students from all majors and backgrounds to join. Please note that participants younger than 18 years old must be accompanied by a parent or guardian.",
+    },
+    {
+      question: "Is there a code of conduct?",
+      answer: (
+        <span>
+          Absolutely — we follow MLH&#39;s Code of Conduct. You can read it
+          here:{" "}
+          <a
+            href="https://static.mlh.io/docs/mlh-code-of-conduct.pdf"
+            target="_blank"
+            rel="noreferrer"
+            className="underline underline-offset-4 hover:text-primary"
+          >
+            MLH Code of Conduct
+          </a>
+          .
+        </span>
+      ),
     },
     {
       question: "Do I need a team?",
