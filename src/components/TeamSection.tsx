@@ -11,7 +11,7 @@ import tanakaMakoniImg from "@/assets/team/tanaka-makoni.jpeg";
 import tenzingDorjiImg from "@/assets/team/tenzing-dorji.jpeg";
 import tonyMallenNtiadorImg from "@/assets/team/tony-mallen-ntiador.jpeg";
 import yurdanurYolcuImg from "@/assets/team/yurdanur-yolcu.jpeg";
-import gopeshBahetiImg from "@/assets/team/gopesh-baheti.jpg"
+import gopeshBahetiImg from "@/assets/team/gopesh-baheti.jpg";
 
 const TeamSection = () => {
   const team = [
@@ -27,7 +27,7 @@ const TeamSection = () => {
       name: "Pacis Nkubito",
       role: "Vice President",
       initials: "PN",
-      linkedin: "https://linkedin.com",
+      linkedin: "https://www.linkedin.com/in/pacis-nkubito-986001201/",
       color: "bg-accent/20",
       image: pacisNkubitoImg,
     },
@@ -35,7 +35,7 @@ const TeamSection = () => {
       name: "Tanaka Makoni",
       role: "Finance",
       initials: "TM",
-      linkedin: "https://linkedin.com",
+      linkedin: "https://www.linkedin.com/in/tanaka-makoni-b415a8268/",
       color: "bg-primary/30",
       image: tanakaMakoniImg,
     },
@@ -43,7 +43,7 @@ const TeamSection = () => {
       name: "Abdul Rafae Kamran",
       role: "Finance",
       initials: "AK",
-      linkedin: "https://linkedin.com",
+      linkedin: "https://www.linkedin.com/in/abdul-rafae-kamran-3129b2393/",
       color: "bg-accent/30",
       image: abdulRafaeKamranImg,
     },
@@ -51,7 +51,7 @@ const TeamSection = () => {
       name: "Tenzing Dhendup Dorji",
       role: "Logistics",
       initials: "TD",
-      linkedin: "https://linkedin.com",
+      linkedin: "https://www.linkedin.com/in/tenzing-dhendup-dorji/",
       color: "bg-primary/25",
       image: tenzingDorjiImg,
     },
@@ -59,7 +59,7 @@ const TeamSection = () => {
       name: "Hakan Bora Yavuzkara",
       role: "Logistics",
       initials: "HY",
-      linkedin: "https://linkedin.com",
+      linkedin: "https://www.linkedin.com/in/hakan-bora-yavuzkara",
       color: "bg-accent/25",
       image: hakanYavuzkaraImg,
     },
@@ -67,7 +67,7 @@ const TeamSection = () => {
       name: "Tony Mallen-Ntiador",
       role: "Logistics",
       initials: "TN",
-      linkedin: "https://linkedin.com",
+      linkedin: "https://www.linkedin.com/in/mawiignen-mallen-ntiador/",
       color: "bg-primary/35",
       image: tonyMallenNtiadorImg,
     },
@@ -75,7 +75,7 @@ const TeamSection = () => {
       name: "Julia Holt",
       role: "Outreach",
       initials: "JH",
-      linkedin: "https://linkedin.com",
+      linkedin: "https://www.linkedin.com/in/julia-holt-1a2343334/",
       color: "bg-accent/35",
       image: juliaHoltImg,
     },
@@ -83,15 +83,22 @@ const TeamSection = () => {
       name: "Yurdanur Yolcu",
       role: "Social Media",
       initials: "YY",
-      linkedin: "https://linkedin.com",
+      linkedin: "https://www.linkedin.com/in/yurdanur-yolcu/",
       color: "bg-primary/28",
       image: yurdanurYolcuImg,
+    },
+    {
+      name: "Adolpho Ramirez",
+      role: "Member",
+      initials: "AR",
+      linkedin: "https://www.linkedin.com/in/adolpho-ramirez/",
+      color: "bg-accent/22",
     },
     {
       name: "Alp Niksarli",
       role: "Advisor",
       initials: "AN",
-      linkedin: "https://linkedin.com",
+      linkedin: "https://www.linkedin.com/in/alpniksarli/",
       color: "bg-accent/28",
       image: alpNiksarliImg,
     },
@@ -99,7 +106,7 @@ const TeamSection = () => {
       name: "Gopesh Baheti",
       role: "Advisor",
       initials: "GB",
-      linkedin: "https://linkedin.com",
+      linkedin: "https://www.linkedin.com/in/gobaheti/",
       color: "bg-primary/32",
       image: gopeshBahetiImg,
     },
@@ -130,15 +137,17 @@ const TeamSection = () => {
                     </Avatar>
 
                     {/* LinkedIn Link */}
-                    <a
-                      href={member.linkedin}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="absolute bottom-0 right-0 w-10 h-10 rounded-full bg-primary text-primary-foreground flex items-center justify-center hover:bg-accent hover:text-accent-foreground transition-all duration-300 transform translate-x-2 translate-y-2 shadow-lg hover:scale-110"
-                      aria-label={`${member.name}'s LinkedIn profile`}
-                    >
-                      <Linkedin className="w-5 h-5" />
-                    </a>
+                    {member.linkedin ? (
+                      <a
+                        href={member.linkedin}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="absolute bottom-0 right-0 w-10 h-10 rounded-full bg-primary text-primary-foreground flex items-center justify-center hover:bg-accent hover:text-accent-foreground transition-all duration-300 transform translate-x-2 translate-y-2 shadow-lg hover:scale-110"
+                        aria-label={`${member.name}'s LinkedIn profile`}
+                      >
+                        <Linkedin className="w-5 h-5" />
+                      </a>
+                    ) : null}
                   </div>
 
                   {/* Info */}
