@@ -88,13 +88,6 @@ const TeamSection = () => {
       image: yurdanurYolcuImg,
     },
     {
-      name: "Adolpho Ramirez",
-      role: "Member",
-      initials: "AR",
-      linkedin: "https://www.linkedin.com/in/adolpho-ramirez/",
-      color: "bg-accent/22",
-    },
-    {
       name: "Alp Niksarli",
       role: "Advisor",
       initials: "AN",
