@@ -161,6 +161,93 @@ export type Database = {
         }
         Relationships: []
       }
+      forms: {
+        Row: {
+          id: string
+          title: string
+          description: string
+          cover_url: string | null
+          status: "DRAFT" | "PUBLISHED" | "OVERDUE" | "ARCHIVED"
+          deadline: string | null
+          created_by: string
+          created_at: string
+          updated_at: string
+        }
+        Insert: {
+          id?: string
+          title: string
+          description?: string
+          cover_url?: string | null
+          status?: "DRAFT" | "PUBLISHED" | "OVERDUE" | "ARCHIVED"
+          deadline?: string | null
+          created_by: string
+          created_at?: string
+          updated_at?: string
+        }
+        Update: {
+          id?: string
+          title?: string
+          description?: string
+          cover_url?: string | null
+          status?: "DRAFT" | "PUBLISHED" | "OVERDUE" | "ARCHIVED"
+          deadline?: string | null
+          created_by?: string
+          created_at?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      form_fields: {
+        Row: {
+          id: string
+          form_id: string
+          position: number
+          label: string
+          field_type: "text" | "number" | "email" | "long_text"
+          placeholder: string | null
+          required: boolean
+        }
+        Insert: {
+          id?: string
+          form_id: string
+          position?: number
+          label: string
+          field_type: "text" | "number" | "email" | "long_text"
+          placeholder?: string | null
+          required?: boolean
+        }
+        Update: {
+          id?: string
+          form_id?: string
+          position?: number
+          label?: string
+          field_type?: "text" | "number" | "email" | "long_text"
+          placeholder?: string | null
+          required?: boolean
+        }
+        Relationships: []
+      }
+      form_submissions: {
+        Row: {
+          id: string
+          form_id: string
+          data: Json
+          created_at: string
+        }
+        Insert: {
+          id?: string
+          form_id: string
+          data?: Json
+          created_at?: string
+        }
+        Update: {
+          id?: string
+          form_id?: string
+          data?: Json
+          created_at?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
@@ -169,7 +256,8 @@ export type Database = {
       [_ in never]: never
     }
     Enums: {
-      [_ in never]: never
+      form_status: "DRAFT" | "PUBLISHED" | "OVERDUE" | "ARCHIVED"
+      form_field_type: "text" | "number" | "email" | "long_text"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -296,6 +384,9 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      form_status: ["DRAFT", "PUBLISHED", "OVERDUE", "ARCHIVED"],
+      form_field_type: ["text", "number", "email", "long_text"],
+    },
   },
 } as const
