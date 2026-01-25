@@ -52,7 +52,7 @@ const formSchema = z.object({
   resume: z.instanceof(File).optional().nullable(),
   mlhCodeOfConduct: z.boolean().refine((val) => val === true, "You must agree to the MLH Code of Conduct"),
   mlhEventLogistics: z.boolean().refine((val) => val === true, "You must agree to the MLH Event Logistics policy"),
-  mlhMarketing: z.boolean().refine((val) => val === true, "You must agree to the MLH Marketing policy"),
+  mlhMarketing: z.boolean().optional(),
   discordJoined: z.boolean().refine((val) => val === true, "Please confirm you've joined the Discord"),
   additionalNotes: z.string().trim().max(1000).optional(),
   parentalConsent: z.boolean().optional(),
@@ -665,9 +665,7 @@ const RegistrationForm = ({ onSuccess }: RegistrationFormProps) => {
                   />
                 </FormControl>
                 <div className="space-y-1 leading-none">
-                  <FormLabel>
-                    MLH Marketing and Newsletters *
-                  </FormLabel>
+                  <FormLabel>MLH Marketing and Newsletters (optional)</FormLabel>
                   <FormDescription>
                     I authorize MLH to send me an email where I can further opt into the MLH Hacker, Events, or Organizer Newsletters and other communications from MLH.
                   </FormDescription>
