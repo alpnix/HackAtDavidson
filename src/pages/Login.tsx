@@ -75,6 +75,23 @@ const Login = () => {
     defaultValues: { password: "", confirmPassword: "" },
   });
 
+  const validateEmail = async (rawEmail: string) => {
+    const email = rawEmail.trim();
+    const { data: profile, error: profileError } = await supabase
+      .from("profile")
+      .select("id")
+      .ilike("email", email)
+      .maybeSingle();
+    if (profileError) throw profileError;
+    if (!profile) {
+      toast.error("Email not recognized", {
+        description: "No account found for that email.",
+      });
+      return null;
+    }
+    return email;
+  };
+
   const verifyOtp = useCallback(
     async (token: string) => {
       if (!forgotEmail || token.length !== 6) return;
@@ -107,8 +124,10 @@ const Login = () => {
   const onLogin = async (data: LoginValues) => {
     setIsSubmitting(true);
     try {
+      const email = await validateEmail(data.email);
+      if (!email) return;
       const { error } = await supabase.auth.signInWithPassword({
-        email: data.email,
+        email,
         password: data.password,
       });
       if (error) throw error;
@@ -125,6 +144,8 @@ const Login = () => {
   const onForgot = async (data: ForgotValues) => {
     setIsSubmitting(true);
     try {
+      const email = await validateEmail(data.email);
+      if (!email) return;
       const { error } = await supabase.auth.resetPasswordForEmail(data.email);
       if (error) throw error;
       toast.success("Check your email", {
