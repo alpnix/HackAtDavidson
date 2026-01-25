@@ -1,8 +1,22 @@
+# Robots.txt for Hack@Davidson
+# Allow all search engines to crawl the site
+
+User-agent: *
+Allow: /
+Disallow: /dashboard
+Disallow: /login
+
+# Sitemap location
+Sitemap: https://hackatdavidson.com/sitemap.xml
+
+# Specific bot instructions
 User-agent: Googlebot
 Allow: /
+Crawl-delay: 0
 
 User-agent: Bingbot
 Allow: /
+Crawl-delay: 0
 
 User-agent: Twitterbot
 Allow: /
@@ -10,5 +24,21 @@ Allow: /
 User-agent: facebookexternalhit
 Allow: /
 
-User-agent: *
+# AI Crawlers
+User-agent: GPTBot
+Allow: /
+
+User-agent: ChatGPT-User
+Allow: /
+
+User-agent: CCBot
+Allow: /
+
+User-agent: anthropic-ai
+Allow: /
+
+User-agent: Claude-Web
+Allow: /
+
+User-agent: PerplexityBot
 Allow: /

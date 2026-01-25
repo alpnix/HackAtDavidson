@@ -1,9 +1,10 @@
 import { useEffect, useState, useCallback } from "react";
 import { useParams, useNavigate, Link } from "react-router-dom";
+import { Helmet } from "react-helmet-async";
 import { supabase } from "@/integrations/supabase/client";
 import type { BlogWithCreator } from "@/types/blog";
 import { Button } from "@/components/ui/button";
-import { getCoverUrl, authorLabel } from "@/lib/blog-utils";
+import { getCoverUrl, authorLabel, stripHtml } from "@/lib/blog-utils";
 import { UpdateBlogDialog } from "../components/UpdateBlogDialog";
 import { format } from "date-fns";
 import {
@@ -14,6 +15,7 @@ import {
   Pencil,
 } from "lucide-react";
 import { toast } from "sonner";
+import { SITE_CONFIG, getCanonicalUrl, getBlogPostingStructuredData } from "@/lib/seo";
 
 const blogSelect = "*, profile(firstname, lastname)";
 
@@ -99,9 +101,60 @@ export default function BlogDetail() {
   }
 
   const coverUrl = getCoverUrl(blog.cover_url);
+  const description = stripHtml(blog.content, 160);
+  const blogUrl = getCanonicalUrl(`/blog/${blog.id}`);
+  const defaultImage = getCanonicalUrl(SITE_CONFIG.ogImage);
+  const ogImage = coverUrl || defaultImage;
+  const authorName = authorLabel(blog.profile);
+  const blogStructuredData = getBlogPostingStructuredData(blog);
 
   return (
     <div className="min-h-screen bg-background">
+      <Helmet>
+        {/* Primary Meta Tags */}
+        <title>{blog.title} | {SITE_CONFIG.name}</title>
+        <meta name="title" content={blog.title} />
+        <meta name="description" content={description} />
+        <meta name="author" content={authorName} />
+        <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
+        <link rel="canonical" href={blogUrl} />
+
+        {/* Article Meta Tags */}
+        <meta property="article:published_time" content={blog.created_at} />
+        <meta property="article:modified_time" content={blog.created_at} />
+        <meta property="article:author" content={authorName} />
+        <meta property="article:section" content="Technology" />
+
+        {/* Open Graph / Facebook */}
+        <meta property="og:type" content="article" />
+        <meta property="og:url" content={blogUrl} />
+        <meta property="og:title" content={blog.title} />
+        <meta property="og:description" content={description} />
+        <meta property="og:image" content={ogImage} />
+        <meta property="og:site_name" content={SITE_CONFIG.name} />
+        <meta property="og:locale" content={SITE_CONFIG.locale} />
+        {coverUrl && (
+          <>
+            <meta property="og:image:width" content="1200" />
+            <meta property="og:image:height" content="630" />
+          </>
+        )}
+
+        {/* Twitter */}
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:site" content={SITE_CONFIG.twitterHandle} />
+        <meta name="twitter:creator" content={SITE_CONFIG.twitterHandle} />
+        <meta name="twitter:url" content={blogUrl} />
+        <meta name="twitter:title" content={blog.title} />
+        <meta name="twitter:description" content={description} />
+        <meta name="twitter:image" content={ogImage} />
+        {coverUrl && <meta name="twitter:image:alt" content={blog.title} />}
+
+        {/* Structured Data */}
+        <script type="application/ld+json">
+          {JSON.stringify(blogStructuredData)}
+        </script>
+      </Helmet>
       <header className="sticky top-0 z-10 border-b border-border bg-card/95 backdrop-blur supports-[backdrop-filter]:bg-card/80">
         <div className="mx-auto flex max-w-3xl flex-wrap items-center justify-between gap-4 px-4 py-4 sm:px-6">
           <div className="flex items-center gap-4">

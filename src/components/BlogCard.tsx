@@ -2,15 +2,10 @@ import { Link } from "react-router-dom";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { format } from "date-fns";
-import { getCoverUrl, authorLabel } from "@/lib/blog-utils";
+import { getCoverUrl, authorLabel, stripHtml } from "@/lib/blog-utils";
 import { Archive, ImageOff } from "lucide-react";
 import { cn } from "@/lib/utils";
 import type { BlogWithCreator } from "@/types/blog";
-
-function stripHtml(html: string, maxLen: number): string {
-  const plain = html.replace(/<[^>]*>/g, " ").replace(/\s+/g, " ").trim();
-  return plain.length <= maxLen ? plain : plain.slice(0, maxLen) + "…";
-}
 
 interface BlogCardProps {
   blog: BlogWithCreator;

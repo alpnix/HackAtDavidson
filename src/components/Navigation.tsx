@@ -1,21 +1,45 @@
-import { Link } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Menu } from "lucide-react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import RegistrationDialog from "./RegistrationDialog";
 import logo from "@/assets/hack-davidson-logo.png";
 
 const Navigation = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [registrationOpen, setRegistrationOpen] = useState(false);
+  const location = useLocation();
+  const navigate = useNavigate();
+  const isHomePage = location.pathname === "/";
 
   const scrollToSection = (id: string) => {
-    const element = document.getElementById(id);
-    if (element) {
-      element.scrollIntoView({ behavior: "smooth" });
-      setIsOpen(false);
+    // If we're on the home page, scroll directly
+    if (isHomePage) {
+      const element = document.getElementById(id);
+      if (element) {
+        element.scrollIntoView({ behavior: "smooth" });
+        setIsOpen(false);
+        return;
+      }
     }
+    
+    // If we're on a different page, navigate to home with hash
+    navigate(`/#${id}`);
+    setIsOpen(false);
   };
+
+  // Handle scrolling when arriving at home page with hash
+  useEffect(() => {
+    if (isHomePage && location.hash) {
+      const id = location.hash.substring(1); // Remove the #
+      setTimeout(() => {
+        const element = document.getElementById(id);
+        if (element) {
+          element.scrollIntoView({ behavior: "smooth" });
+        }
+      }, 100); // Small delay to ensure page is rendered
+    }
+  }, [isHomePage, location.hash]);
 
   return (
     <nav className="fixed top-0 left-0 right-0 z-50 bg-background/95 backdrop-blur-md border-b border-border">
