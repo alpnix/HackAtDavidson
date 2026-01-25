@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Menu } from "lucide-react";
 import { useState } from "react";
@@ -20,14 +21,14 @@ const Navigation = () => {
     <nav className="fixed top-0 left-0 right-0 z-50 bg-background/95 backdrop-blur-md border-b border-border">
       <div className="container mx-auto pr-4 sm:pr-6 pl-16 sm:pl-20 md:pl-24 lg:pl-28 py-3 sm:py-4">
         <div className="flex items-center justify-between">
-          <div className="flex items-center gap-3">
+          <Link to="/" className="flex items-center gap-3 hover:opacity-90 transition-opacity">
             <img 
               src={logo} 
               alt="Hack@Davidson Logo" 
               className="w-10 h-10 sm:w-12 sm:h-12 object-contain"
             />
             <h2 className="text-xl sm:text-2xl font-bold text-primary">Hack@Davidson</h2>
-          </div>
+          </Link>
           
           {/* Desktop Navigation */}
           <div className="hidden lg:flex items-center gap-8">
@@ -49,6 +50,9 @@ const Navigation = () => {
             <button onClick={() => scrollToSection("sponsors")} className="text-foreground hover:text-primary transition-colors">
               Sponsors
             </button>
+            <Link to="/blog" className="text-foreground hover:text-primary transition-colors">
+              Blog
+            </Link>
             <RegistrationDialog open={registrationOpen} onOpenChange={setRegistrationOpen} />
           </div>
 
@@ -84,6 +88,9 @@ const Navigation = () => {
             <button onClick={() => scrollToSection("sponsors")} className="block w-full text-left py-2.5 text-base text-foreground hover:text-primary transition-colors">
               Sponsors
             </button>
+            <Link to="/blog" onClick={() => setIsOpen(false)} className="block w-full text-left py-2.5 text-base text-foreground hover:text-primary transition-colors">
+              Blog
+            </Link>
             <RegistrationDialog 
               open={registrationOpen} 
               onOpenChange={setRegistrationOpen}

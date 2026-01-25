@@ -14,6 +14,36 @@ export type Database = {
   }
   public: {
     Tables: {
+      profile: {
+        Row: {
+          id: string
+          email: string
+          firstname: string
+          lastname: string
+          role: string
+          created_at: string
+          updated_at: string
+        }
+        Insert: {
+          id?: string
+          email: string
+          firstname: string
+          lastname: string
+          role?: string
+          created_at?: string
+          updated_at?: string
+        }
+        Update: {
+          id?: string
+          email?: string
+          firstname?: string
+          lastname?: string
+          role?: string
+          created_at?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       registrations: {
         Row: {
           additional_notes: string | null
@@ -94,6 +124,39 @@ export type Database = {
           school?: string
           school_other?: string | null
           tshirt_size?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      blogs: {
+        Row: {
+          id: string
+          title: string
+          cover_url: string | null
+          content: string
+          created_by: string
+          archived: boolean
+          created_at: string
+          updated_at: string
+        }
+        Insert: {
+          id?: string
+          title: string
+          cover_url?: string | null
+          content: string
+          created_by: string
+          archived?: boolean
+          created_at?: string
+          updated_at?: string
+        }
+        Update: {
+          id?: string
+          title?: string
+          cover_url?: string | null
+          content?: string
+          created_by?: string
+          archived?: boolean
+          created_at?: string
           updated_at?: string
         }
         Relationships: []
