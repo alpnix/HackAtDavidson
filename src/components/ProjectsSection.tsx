@@ -14,7 +14,7 @@ const ProjectsSection = () => {
             Last Year's Projects
           </h2>
           <p className="text-base sm:text-lg md:text-xl text-muted-foreground mb-6 sm:mb-8 px-4">
-            Check out the amazing projects from Hack@Davidson 2023
+            Check out the amazing projects from Hack@Davidson 2025
           </p>
           <p className="text-sm sm:text-base text-muted-foreground/80 mb-10 sm:mb-12 px-4">
             From AI-powered solutions to innovative web apps, our hackers built incredible projects in just 48 hours.
@@ -38,7 +38,7 @@ const ProjectsSection = () => {
                 asChild
               >
                 <a
-                  href="https://hackatdavidson.devpost.com/project-gallery"
+                  href="https://hack-davidson-2025.devpost.com/project-gallery"
                   target="_blank"
                   rel="noopener noreferrer"
                 >
