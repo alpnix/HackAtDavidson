@@ -144,8 +144,8 @@ const Login = () => {
   const onForgot = async (data: ForgotValues) => {
     setIsSubmitting(true);
     try {
-      const email = await validateEmail(data.email);
-      if (!email) return;
+      // const email = await validateEmail(data.email);
+      // if (!email) return;
       const { error } = await supabase.auth.resetPasswordForEmail(data.email);
       if (error) throw error;
       toast.success("Check your email", {
