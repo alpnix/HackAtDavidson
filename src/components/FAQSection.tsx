@@ -31,7 +31,7 @@ const FAQSection = () => {
     },
     {
       question: "Do I need a team?",
-      answer: "Nope! You can come solo and find a team at the event, or bring your own team of up to 4 people. We'll have team formation sessions to help everyone find their perfect match.",
+      answer: "Nope! You can come solo and find a team at the event, or bring your own team of up to 3 people. We'll have team formation sessions to help everyone find their perfect match.",
     },
     {
       question: "What should I bring?",
