@@ -19,6 +19,7 @@ import cloudflare from "@/assets/sponsors/cloudflare.png";
 import elevenlabs from "@/assets/sponsors/elevenlabs.svg";
 import mobbin from "@/assets/sponsors/mobbin.png";
 import pcbway from "@/assets/sponsors/pcbway.png";
+import vercel from "@/assets/sponsors/vercel.svg";
 
 const sponsors = [
   { name: "Precisely", logo: precisely },
@@ -40,6 +41,7 @@ const sponsors = [
   { name: "Davidson College", logo: davidsonCollege },
   { name: "Nord", logo: nord },
   { name: "Cloudflare", logo: cloudflare },
+  { name: "Vercel", logo: vercel },
 ];
 
 const SponsorsSection = () => {
