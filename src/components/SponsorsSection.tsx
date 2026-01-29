@@ -19,9 +19,11 @@ import cloudflare from "@/assets/sponsors/cloudflare.png";
 import elevenlabs from "@/assets/sponsors/elevenlabs.svg";
 import mobbin from "@/assets/sponsors/mobbin.png";
 import pcbway from "@/assets/sponsors/pcbway.png";
+import vercel from "@/assets/sponsors/vercel.png";
 
 const sponsors = [
   { name: "Precisely", logo: precisely },
+  { name: "Vercel", logo: vercel },
   { name: "ElevenLabs", logo: elevenlabs },
   { name: "Fidelity Investments", logo: fidelity },
   { name: "The Hurt Hub @ Davidson", logo: hurtHub },
