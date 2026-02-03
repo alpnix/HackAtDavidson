@@ -12,13 +12,14 @@ import { SITE_CONFIG, getCanonicalUrl, getBlogStructuredData } from "@/lib/seo";
 export default function Blog() {
   const [blogs, setBlogs] = useState<BlogWithCreator[]>([]);
   const [loading, setLoading] = useState(true);
+  const blogSelect = "*, profile(firstname, lastname)";
 
   const fetchBlogs = useCallback(async () => {
     setLoading(true);
     try {
       const { data, error } = await supabase
         .from("blogs")
-        .select("*")
+        .select(blogSelect)
         .eq("archived", false)
         .order("created_at", { ascending: false });
       if (error) throw error;
