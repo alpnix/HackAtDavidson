@@ -50,9 +50,7 @@ export function BlogCard({ blog, onArchive, className }: BlogCardProps) {
           </div>
           <p className="text-xs text-muted-foreground">
             {authorLabel(blog.profile)} · {format(new Date(blog.created_at), "MMM d, yyyy")}
-            {onArchive && (
               <> · <Eye className="inline h-3 w-3 mr-0.5 align-text-bottom" />{blog.view_count ?? 0} views</>
-            )}
           </p>
           <p className="text-sm text-foreground/80 line-clamp-2">{preview}</p>
           {onArchive && (
