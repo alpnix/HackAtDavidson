@@ -26,7 +26,7 @@ export function BlogCard({ blog, onArchive, className }: BlogCardProps) {
     });
   }, []);
 
-  const showActions = isLoggedIn;
+  const showActions = isLoggedIn && onArchive;
 
   return (
     <Link to={`/blog/${blog.id}`} className="block">
