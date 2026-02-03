@@ -20,7 +20,6 @@ export default function Blog() {
       const { data, error } = await supabase
         .from("blogs")
         .select(blogSelect)
-        .eq("archived", false)
         .order("created_at", { ascending: false });
       if (error) throw error;
       setBlogs((data ?? []) as unknown as BlogWithCreator[]);
