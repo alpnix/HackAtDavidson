@@ -57,19 +57,17 @@ export function BlogCard({ blog, onArchive, className }: BlogCardProps) {
               </span>
           </p>
           <p className="text-sm text-foreground/80 line-clamp-2">{preview}</p>
-          {onArchive && (
-            <button
-              type="button"
-              onClick={(e) => {
-                e.preventDefault();
-                e.stopPropagation();
-                onArchive(blog);
-              }}
-              className="mt-2 rounded-md bg-destructive px-3 py-2 text-sm font-medium text-destructive-foreground transition-colors hover:bg-destructive/90"
-            >
-              {blog.archived ? "Unarchive" : "Archive"}
-            </button>
-          )}
+          <button
+            type="button"
+            onClick={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              onArchive(blog);
+            }}
+            className="mt-2 rounded-md bg-destructive px-3 py-2 text-sm font-medium text-destructive-foreground transition-colors hover:bg-destructive/90"
+          >
+            {blog.archived ? "Unarchive" : "Archive"}
+          </button>
         </CardContent>
       </Card>
     </Link>
