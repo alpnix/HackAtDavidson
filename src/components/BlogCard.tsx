@@ -48,9 +48,13 @@ export function BlogCard({ blog, onArchive, className }: BlogCardProps) {
               </Badge>
             )}
           </div>
-          <p className="text-xs text-muted-foreground">
-            {authorLabel(blog.profile)} · {format(new Date(blog.created_at), "MMM d, yyyy")}
-              <> · <Eye className="inline h-3 w-3 mr-0.5 align-text-bottom" />{blog.view_count ?? 0} views</>
+          <p className="text-xs text-muted-foreground flex flex-wrap items-center gap-x-1">
+            <span>{authorLabel(blog.profile)} · {format(new Date(blog.created_at), "MMM d, yyyy")}</span>
+              <span className="inline-flex items-center gap-1">
+                <span>·</span>
+                <Eye className="h-3 w-3 shrink-0" />
+                <span>{blog.view_count ?? 0} views</span>
+              </span>
           </p>
           <p className="text-sm text-foreground/80 line-clamp-2">{preview}</p>
           {onArchive && (

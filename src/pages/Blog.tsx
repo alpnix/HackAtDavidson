@@ -8,7 +8,6 @@ import Footer from "@/components/Footer";
 import { Loader2 } from "lucide-react";
 import { SITE_CONFIG, getCanonicalUrl, getBlogStructuredData } from "@/lib/seo";
 
-const blogSelect = "id, title, cover_url, content, created_by, archived, created_at, updated_at, profile(firstname, lastname)";
 
 export default function Blog() {
   const [blogs, setBlogs] = useState<BlogWithCreator[]>([]);
@@ -19,7 +18,7 @@ export default function Blog() {
     try {
       const { data, error } = await supabase
         .from("blogs")
-        .select(blogSelect)
+        .select("*")
         .eq("archived", false)
         .order("created_at", { ascending: false });
       if (error) throw error;
