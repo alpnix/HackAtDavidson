@@ -12,7 +12,7 @@ import { SITE_CONFIG, getCanonicalUrl, getBlogStructuredData } from "@/lib/seo";
 export default function Blog() {
   const [blogs, setBlogs] = useState<BlogWithCreator[]>([]);
   const [loading, setLoading] = useState(true);
-  const blogSelect = "*, profile(firstname, lastname)";
+  const blogSelect = "id, title, cover_url, content, created_by, archived, created_at, updated_at, profile(firstname, lastname)";
 
   const fetchBlogs = useCallback(async () => {
     setLoading(true);
