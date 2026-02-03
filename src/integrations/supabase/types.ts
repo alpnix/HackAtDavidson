@@ -136,6 +136,7 @@ export type Database = {
           content: string
           created_by: string
           archived: boolean
+          view_count: number
           created_at: string
           updated_at: string
         }
@@ -146,6 +147,7 @@ export type Database = {
           content: string
           created_by: string
           archived?: boolean
+          view_count?: number
           created_at?: string
           updated_at?: string
         }
@@ -156,6 +158,7 @@ export type Database = {
           content?: string
           created_by?: string
           archived?: boolean
+          view_count?: number
           created_at?: string
           updated_at?: string
         }
@@ -253,7 +256,10 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      increment_blog_view_count: {
+        Args: { blog_id: string }
+        Returns: undefined
+      }
     }
     Enums: {
       form_status: "DRAFT" | "PUBLISHED" | "OVERDUE" | "ARCHIVED"

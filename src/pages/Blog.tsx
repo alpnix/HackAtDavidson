@@ -8,7 +8,7 @@ import Footer from "@/components/Footer";
 import { Loader2 } from "lucide-react";
 import { SITE_CONFIG, getCanonicalUrl, getBlogStructuredData } from "@/lib/seo";
 
-const blogSelect = "*, profile(firstname, lastname)";
+const blogSelect = "id, title, cover_url, content, created_by, archived, created_at, updated_at, profile(firstname, lastname)";
 
 export default function Blog() {
   const [blogs, setBlogs] = useState<BlogWithCreator[]>([]);
