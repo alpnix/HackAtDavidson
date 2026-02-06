@@ -32,8 +32,8 @@ export function BlogSection() {
         .order("created_at", { ascending: false });
       if (e2) throw e2;
 
-      setDisplayed((displayedData ?? []) as BlogWithCreator[]);
-      setArchived((archivedData ?? []) as BlogWithCreator[]);
+      setDisplayed((displayedData ?? []) as unknown as BlogWithCreator[]);
+      setArchived((archivedData ?? []) as unknown as BlogWithCreator[]);
     } catch (e) {
       console.error(e);
     } finally {

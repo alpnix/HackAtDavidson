@@ -17,7 +17,7 @@ import {
 import { toast } from "sonner";
 import { SITE_CONFIG, getCanonicalUrl, getBlogPostingStructuredData } from "@/lib/seo";
 
-const blogSelect = "*, profile(firstname, lastname)";
+const blogSelect = "id, title, cover_url, content, created_by, archived, created_at, updated_at, profile(firstname, lastname)";
 
 export default function BlogDetail() {
   const { id } = useParams<{ id: string }>();
@@ -52,6 +52,20 @@ export default function BlogDetail() {
   useEffect(() => {
     fetchBlog();
   }, [fetchBlog]);
+
+  useEffect(() => {
+    if (!id || !blog) return;
+    const key = "blog_views";
+    try {
+      const viewed = JSON.parse(sessionStorage.getItem(key) ?? "[]") as string[];
+      if (viewed.includes(id)) return;
+      supabase.rpc("increment_blog_view_count", { blog_id: id }).then(() => {
+        sessionStorage.setItem(key, JSON.stringify([...viewed, id]));
+      });
+    } catch {
+      supabase.rpc("increment_blog_view_count", { blog_id: id });
+    }
+  }, [id, blog?.id]);
 
   useEffect(() => {
     const loadProfile = async () => {

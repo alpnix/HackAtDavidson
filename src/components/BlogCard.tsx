@@ -1,9 +1,11 @@
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { format } from "date-fns";
 import { getCoverUrl, authorLabel, stripHtml } from "@/lib/blog-utils";
-import { Archive, ImageOff } from "lucide-react";
+import { supabase } from "@/integrations/supabase/client";
+import { Archive, ImageOff, Eye } from "lucide-react";
 import { cn } from "@/lib/utils";
 import type { BlogWithCreator } from "@/types/blog";
 
@@ -14,8 +16,17 @@ interface BlogCardProps {
 }
 
 export function BlogCard({ blog, onArchive, className }: BlogCardProps) {
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
   const coverUrl = getCoverUrl(blog.cover_url);
   const preview = stripHtml(blog.content, 120);
+
+  useEffect(() => {
+    supabase.auth.getUser().then(({ data: { user } }) => {
+      setIsLoggedIn(!!user);
+    });
+  }, []);
+
+  const showActions = isLoggedIn && onArchive;
 
   return (
     <Link to={`/blog/${blog.id}`} className="block">
@@ -48,17 +59,24 @@ export function BlogCard({ blog, onArchive, className }: BlogCardProps) {
               </Badge>
             )}
           </div>
-          <p className="text-xs text-muted-foreground">
-            {authorLabel(blog.profile)} · {format(new Date(blog.created_at), "MMM d, yyyy")}
+          <p className="text-xs text-muted-foreground flex flex-wrap items-center gap-x-1">
+            <span>{authorLabel(blog.profile)} · {format(new Date(blog.created_at), "MMM d, yyyy")}</span>
+            {blog.view_count != null && (
+              <span className="inline-flex items-center gap-1">
+                <span>·</span>
+                <Eye className="h-3 w-3 shrink-0" />
+                <span>{blog.view_count} views</span>
+              </span>
+            )}
           </p>
           <p className="text-sm text-foreground/80 line-clamp-2">{preview}</p>
-          {onArchive && (
+          {showActions && (
             <button
               type="button"
               onClick={(e) => {
                 e.preventDefault();
                 e.stopPropagation();
-                onArchive(blog);
+                onArchive?.(blog);
               }}
               className="mt-2 rounded-md bg-destructive px-3 py-2 text-sm font-medium text-destructive-foreground transition-colors hover:bg-destructive/90"
             >

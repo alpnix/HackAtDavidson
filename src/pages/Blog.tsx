@@ -8,11 +8,11 @@ import Footer from "@/components/Footer";
 import { Loader2 } from "lucide-react";
 import { SITE_CONFIG, getCanonicalUrl, getBlogStructuredData } from "@/lib/seo";
 
-const blogSelect = "*, profile(firstname, lastname)";
 
 export default function Blog() {
   const [blogs, setBlogs] = useState<BlogWithCreator[]>([]);
   const [loading, setLoading] = useState(true);
+  const blogSelect = "id, title, cover_url, content, created_by, archived, created_at, updated_at, profile(firstname, lastname)";
 
   const fetchBlogs = useCallback(async () => {
     setLoading(true);
@@ -20,7 +20,6 @@ export default function Blog() {
       const { data, error } = await supabase
         .from("blogs")
         .select(blogSelect)
-        .eq("archived", false)
         .order("created_at", { ascending: false });
       if (error) throw error;
       setBlogs((data ?? []) as unknown as BlogWithCreator[]);
