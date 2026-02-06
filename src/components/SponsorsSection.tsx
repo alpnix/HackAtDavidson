@@ -30,7 +30,6 @@ const sponsors = [
   { name: "Starknet", logo: starknet },
   { name: "Stellar", logo: stellar },
   { name: "Forest", logo: forest },
-  { name: "P2 Corporate Finance", logo: p2 },
   { name: "CLT", logo: clt },
   { name: "Summit Coffee", logo: summitCoffee },
   { name: "GoDaddy Registry", logo: godaddy },
