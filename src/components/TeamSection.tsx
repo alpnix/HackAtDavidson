@@ -96,7 +96,7 @@ const TeamSection = () => {
       image: alpNiksarliImg,
     },
     {
-      name: "Gopesh Baheti",
+      name: "Gopesh Trinity Baheti",
       role: "Advisor",
       initials: "GB",
       linkedin: "https://www.linkedin.com/in/gobaheti/",
