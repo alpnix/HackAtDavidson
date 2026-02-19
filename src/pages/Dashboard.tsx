@@ -5,17 +5,13 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import RegistrationsTable from "@/components/RegistrationsTable";
 import { BlogSection } from "@/components/BlogSection";
 import { FormsSection } from "@/components/FormsSection";
-import { ProjectRegistrationSection } from "@/components/ProjectRegistrationSection";
-import { SettingsSection } from "@/components/SettingsSection";
 
-type TabId = "registrations" | "blog" | "forms" | "project-registration" | "settings";
+type TabId = "registrations" | "blog" | "forms";
 
 const pathToTab: Record<string, TabId> = {
   "/dashboard": "registrations",
   "/dashboard/blog": "blog",
   "/dashboard/forms": "forms",
-  "/dashboard/project-registration": "project-registration",
-  "/dashboard/settings": "settings",
 };
 
 const Dashboard = () => {
@@ -34,8 +30,6 @@ const Dashboard = () => {
     if (t === "registrations") navigate("/dashboard", { replace: true });
     else if (t === "blog") navigate("/dashboard/blog", { replace: true });
     else if (t === "forms") navigate("/dashboard/forms", { replace: true });
-    else if (t === "project-registration") navigate("/dashboard/project-registration", { replace: true });
-    else if (t === "settings") navigate("/dashboard/settings", { replace: true });
   };
 
   return (
@@ -74,18 +68,6 @@ const Dashboard = () => {
           >
             Forms
           </TabsTrigger>
-          <TabsTrigger
-            value="project-registration"
-            className="data-[state=active]:bg-background data-[state=active]:shadow-sm rounded-md"
-          >
-            Project registration
-          </TabsTrigger>
-          <TabsTrigger
-            value="settings"
-            className="data-[state=active]:bg-background data-[state=active]:shadow-sm rounded-md"
-          >
-            Settings
-          </TabsTrigger>
         </TabsList>
         <TabsContent value="registrations">
           <Card className="border-border bg-card/95 shadow-sm">
@@ -123,32 +105,6 @@ const Dashboard = () => {
             </CardHeader>
             <CardContent>
               <FormsSection />
-            </CardContent>
-          </Card>
-        </TabsContent>
-        <TabsContent value="project-registration">
-          <Card className="border-border bg-card/95 shadow-sm">
-            <CardHeader>
-              <CardTitle className="text-primary">Project registration</CardTitle>
-              <CardDescription>
-                Share the project registration link and QR code. Open or close via Settings.
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <ProjectRegistrationSection />
-            </CardContent>
-          </Card>
-        </TabsContent>
-        <TabsContent value="settings">
-          <Card className="border-border bg-card/95 shadow-sm">
-            <CardHeader>
-              <CardTitle className="text-primary">Settings</CardTitle>
-              <CardDescription>
-                View and edit app settings. Use the row menu to edit a value.
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <SettingsSection />
             </CardContent>
           </Card>
         </TabsContent>
