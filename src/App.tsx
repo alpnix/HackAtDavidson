@@ -12,6 +12,7 @@ import FormDetailPage from "./pages/FormDetailPage";
 import Blog from "./pages/Blog";
 import BlogDetail from "./pages/BlogDetail";
 import FormFill from "./pages/FormFill";
+import ProjectRegistrationFill from "./pages/ProjectRegistrationFill";
 import NotFound from "./pages/NotFound";
 import ProtectedRoute from "./components/ProtectedRoute";
 
@@ -32,10 +33,13 @@ const App = () => (
               <Route path="blog" element={<Dashboard />} />
               <Route path="forms" element={<Dashboard />} />
               <Route path="forms/:id" element={<FormDetailPage />} />
+              <Route path="project-registration" element={<Dashboard />} />
+              <Route path="settings" element={<Dashboard />} />
             </Route>
             <Route path="/blog" element={<Blog />} />
             <Route path="/blog/:id" element={<BlogDetail />} />
             <Route path="/forms/:id/submit" element={<FormFill />} />
+            <Route path="/project-registration/submit" element={<ProjectRegistrationFill />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>

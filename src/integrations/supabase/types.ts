@@ -251,6 +251,90 @@ export type Database = {
         }
         Relationships: []
       }
+      hackathons: {
+        Row: {
+          id: string
+          created_at: string
+          year: number
+        }
+        Insert: {
+          id?: string
+          created_at?: string
+          year: number
+        }
+        Update: {
+          id?: string
+          created_at?: string
+          year?: number
+        }
+        Relationships: []
+      }
+      projects: {
+        Row: {
+          id: string
+          created_at: string
+          hackathon_id: string
+          name: string
+        }
+        Insert: {
+          id?: string
+          created_at?: string
+          hackathon_id: string
+          name: string
+        }
+        Update: {
+          id?: string
+          created_at?: string
+          hackathon_id?: string
+          name?: string
+        }
+        Relationships: []
+      }
+      project_members: {
+        Row: {
+          id: string
+          created_at: string
+          registration_id: string
+          project_id: string
+        }
+        Insert: {
+          id?: string
+          created_at?: string
+          registration_id: string
+          project_id: string
+        }
+        Update: {
+          id?: string
+          created_at?: string
+          registration_id?: string
+          project_id?: string
+        }
+        Relationships: []
+      }
+      settings: {
+        Row: {
+          id: string
+          created_at: string
+          name: string
+          value: string
+          value_type: "boolean" | "string" | "number"
+        }
+        Insert: {
+          id?: string
+          created_at?: string
+          name: string
+          value: string
+          value_type: "boolean" | "string" | "number"
+        }
+        Update: {
+          id?: string
+          created_at?: string
+          name?: string
+          value?: string
+          value_type?: "boolean" | "string" | "number"
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
