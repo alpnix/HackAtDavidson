@@ -52,6 +52,7 @@ export type Database = {
           allergies_detail: string | null
           checked_in: boolean
           checked_in_at: string | null
+          checked_in_by: string | null
           country_of_residence: string
           country_other: string | null
           created_at: string
@@ -81,6 +82,7 @@ export type Database = {
           allergies_detail?: string | null
           checked_in?: boolean
           checked_in_at?: string | null
+          checked_in_by?: string | null
           country_of_residence: string
           country_other?: string | null
           created_at?: string
@@ -110,6 +112,7 @@ export type Database = {
           allergies_detail?: string | null
           checked_in?: boolean
           checked_in_at?: string | null
+          checked_in_by?: string | null
           country_of_residence?: string
           country_other?: string | null
           created_at?: string

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import type { Tables } from "@/integrations/supabase/types";
 import { supabase } from "@/integrations/supabase/client";
 import {
@@ -87,6 +87,31 @@ export function RegistrationDetailDialog({
   onRegistrationUpdated,
 }: RegistrationDetailDialogProps) {
   const [checkingIn, setCheckingIn] = useState(false);
+  const [checkedInByName, setCheckedInByName] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (!registration?.checked_in_by || !open) {
+      setCheckedInByName(null);
+      return;
+    }
+    let cancelled = false;
+    void (async () => {
+      try {
+        const { data } = await supabase
+          .from("profile")
+          .select("firstname, lastname")
+          .eq("id", registration.checked_in_by)
+          .single();
+        if (!cancelled && data)
+          setCheckedInByName([data.firstname, data.lastname].filter(Boolean).join(" ") || null);
+      } catch {
+        if (!cancelled) setCheckedInByName(null);
+      }
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, [registration?.checked_in_by, open]);
 
   if (!registration) return null;
 
@@ -96,11 +121,13 @@ export function RegistrationDetailDialog({
     if (!!r.checked_in) return;
     setCheckingIn(true);
     try {
+      const { data: { user } } = await supabase.auth.getUser();
       const { data, error } = await supabase
         .from("registrations")
         .update({
           checked_in: true,
           checked_in_at: new Date().toISOString(),
+          checked_in_by: user?.id ?? null,
         })
         .eq("id", r.id)
         .select()
@@ -143,6 +170,12 @@ export function RegistrationDetailDialog({
               <span className="flex items-center gap-1.5 text-xs text-muted-foreground">
                 <Clock className="h-3.5 w-3.5" />
                 {format(new Date(r.checked_in_at), "PPp")}
+                {checkedInByName && (
+                  <>
+                    <span className="text-muted-foreground/70">·</span>
+                    <span>by {checkedInByName}</span>
+                  </>
+                )}
               </span>
             )}
             <Button

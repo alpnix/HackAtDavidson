@@ -93,9 +93,22 @@ const RegistrationsTable = () => {
 
       if (searchQuery) {
         const term = `%${searchQuery}%`;
-        q = q.or(
-          `email.ilike.${term},first_name.ilike.${term},last_name.ilike.${term},school.ilike.${term}`
-        );
+        const words = searchQuery.trim().split(/\s+/).filter(Boolean);
+        const orParts = [
+          `email.ilike.${term}`,
+          `first_name.ilike.${term}`,
+          `last_name.ilike.${term}`,
+          `school.ilike.${term}`,
+        ];
+        if (words.length >= 2) {
+          const w1 = `%${words[0]}%`;
+          const w2 = `%${words[1]}%`;
+          orParts.push(
+            `and(first_name.ilike.${w1},last_name.ilike.${w2})`,
+            `and(first_name.ilike.${w2},last_name.ilike.${w1})`
+          );
+        }
+        q = q.or(orParts.join(","));
       }
       if (levelFilter && levelFilter !== "all") q = q.eq("level_of_study", levelFilter);
       if (transportFilter && transportFilter !== "all") q = q.eq("airport_transportation", transportFilter);
