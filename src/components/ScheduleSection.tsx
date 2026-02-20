@@ -28,6 +28,7 @@ const ScheduleSection = () => {
       day: "Day 3 - Sunday, February 22",
       events: [
         { time: "8:00 AM", title: "Breakfast", description: "Final day fuel" },
+        { time: "10:00 AM", title: "Early Career Navigation Workshop", description: "Royce Chen", room: "Hurthub 208" },
         { time: "10:00 AM", title: "Submissions Due", description: "Finalize your projects" },
         { time: "11:00 AM", title: "Judging Begins", description: "Present to our judges" },
         { time: "12:00 PM", title: "Lunch", description: "Meal break" },
