@@ -31,6 +31,7 @@ import { schools } from "@/data/schools";
 import { countries } from "@/data/countries";
 import { supabase } from "@/integrations/supabase/client";
 import { FileUpload } from "@/components/FileUpload";
+import { REGISTRATIONS_CLOSED } from "@/lib/constants";
 
 const formSchema = z.object({
   email: z.string().trim().email("Invalid email address").max(255, "Email must be less than 255 characters"),
@@ -111,6 +112,10 @@ const RegistrationForm = ({ onSuccess }: RegistrationFormProps) => {
   const dietaryRestrictions = form.watch("dietaryRestrictions");
 
   const onSubmit = async (data: FormValues) => {
+    if (REGISTRATIONS_CLOSED) {
+      toast.error("Registration is closed.");
+      return;
+    }
     setIsSubmitting(true);
     
     try {
@@ -209,6 +214,11 @@ const RegistrationForm = ({ onSuccess }: RegistrationFormProps) => {
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+        {REGISTRATIONS_CLOSED && (
+          <p className="rounded-lg border border-border bg-muted/50 px-4 py-3 text-sm text-muted-foreground">
+            Registration is currently closed.
+          </p>
+        )}
         <FormField
           control={form.control}
           name="email"
@@ -752,13 +762,15 @@ const RegistrationForm = ({ onSuccess }: RegistrationFormProps) => {
         <Button 
           type="submit" 
           className="w-full bg-accent hover:bg-accent/90 text-accent-foreground"
-          disabled={isSubmitting}
+          disabled={isSubmitting || REGISTRATIONS_CLOSED}
         >
           {isSubmitting ? (
             <>
               <Loader2 className="mr-2 h-4 w-4 animate-spin" />
               Submitting...
             </>
+          ) : REGISTRATIONS_CLOSED ? (
+            "Registration Closed"
           ) : (
             "Submit Registration"
           )}

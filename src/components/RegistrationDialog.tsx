@@ -1,6 +1,7 @@
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import RegistrationForm from "./RegistrationForm";
+import { REGISTRATIONS_CLOSED } from "@/lib/constants";
 
 interface RegistrationDialogProps {
   trigger?: React.ReactNode;
@@ -9,6 +10,18 @@ interface RegistrationDialogProps {
 }
 
 const RegistrationDialog = ({ trigger, open, onOpenChange }: RegistrationDialogProps) => {
+  if (REGISTRATIONS_CLOSED) {
+    return (
+      <Button
+        size="lg"
+        disabled
+        className="bg-muted text-muted-foreground cursor-not-allowed hover:bg-muted hover:text-muted-foreground"
+      >
+        Registration Closed
+      </Button>
+    );
+  }
+
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogTrigger asChild>

@@ -1,3 +1,6 @@
+/** Set to true to close registration (gray button, no dialog open, submit blocked). */
+export const REGISTRATIONS_CLOSED = true;
+
 export const DASHBOARD_ROLES = [
   "PRESIDENT",
   "VICE_PRESIDENT",
