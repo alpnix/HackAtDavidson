@@ -10,8 +10,6 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
 import {
   Select,
   SelectContent,
@@ -28,8 +26,9 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from "@/components/ui/pagination";
-import { Loader2, Search, Eye } from "lucide-react";
+import { Loader2, Search, CheckCircle2, Circle } from "lucide-react";
 import { RegistrationDetailDialog } from "@/components/RegistrationDetailDialog";
+import { Label } from "@/components/ui/label";
 
 type Registration = Tables<"registrations">;
 
@@ -46,17 +45,18 @@ const LEVEL_OPTIONS = [
   { value: "other", label: "Other" },
 ];
 
-const DISCORD_OPTIONS = [
-  { value: "all", label: "All" },
-  { value: "true", label: "Joined" },
-  { value: "false", label: "Not joined" },
-];
 
 const TRANSPORT_OPTIONS = [
   { value: "all", label: "All" },
   { value: "yes", label: "Yes" },
   { value: "no", label: "No" },
   { value: "maybe", label: "Maybe" },
+];
+
+const CHECK_IN_OPTIONS = [
+  { value: "all", label: "All" },
+  { value: "true", label: "Checked in" },
+  { value: "false", label: "Not checked in" },
 ];
 
 const RegistrationsTable = () => {
@@ -66,8 +66,8 @@ const RegistrationsTable = () => {
   const [searchInput, setSearchInput] = useState("");
   const [searchQuery, setSearchQuery] = useState("");
   const [levelFilter, setLevelFilter] = useState("all");
-  const [discordFilter, setDiscordFilter] = useState("all");
   const [transportFilter, setTransportFilter] = useState("all");
+  const [checkInFilter, setCheckInFilter] = useState("all");
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [detailOpen, setDetailOpen] = useState(false);
@@ -80,7 +80,7 @@ const RegistrationsTable = () => {
 
   useEffect(() => {
     setPage(1);
-  }, [searchQuery, levelFilter, discordFilter, transportFilter]);
+  }, [searchQuery, levelFilter, transportFilter, checkInFilter]);
 
   const fetchRegistrations = useCallback(async () => {
     setLoading(true);
@@ -98,8 +98,8 @@ const RegistrationsTable = () => {
         );
       }
       if (levelFilter && levelFilter !== "all") q = q.eq("level_of_study", levelFilter);
-      if (discordFilter && discordFilter !== "all") q = q.eq("discord_joined", discordFilter === "true");
       if (transportFilter && transportFilter !== "all") q = q.eq("airport_transportation", transportFilter);
+      if (checkInFilter && checkInFilter !== "all") q = q.eq("checked_in", checkInFilter === "true");
 
       const from = (page - 1) * PAGE_SIZE;
       const to = from + PAGE_SIZE - 1;
@@ -115,7 +115,7 @@ const RegistrationsTable = () => {
     } finally {
       setLoading(false);
     }
-  }, [page, searchQuery, levelFilter, discordFilter, transportFilter]);
+  }, [page, searchQuery, levelFilter, transportFilter, checkInFilter]);
 
   useEffect(() => {
     fetchRegistrations();
@@ -125,8 +125,8 @@ const RegistrationsTable = () => {
   const hasFilters = !!(
     searchQuery ||
     (levelFilter && levelFilter !== "all") ||
-    (discordFilter && discordFilter !== "all") ||
-    (transportFilter && transportFilter !== "all")
+    (transportFilter && transportFilter !== "all") ||
+    (checkInFilter && checkInFilter !== "all")
   );
 
   return (
@@ -142,43 +142,52 @@ const RegistrationsTable = () => {
               className="pl-9"
             />
           </div>
-          <div className="flex flex-wrap items-center gap-2">
-            <Select value={levelFilter} onValueChange={setLevelFilter}>
-              <SelectTrigger className="w-[180px]">
-                <SelectValue placeholder="Level of study" />
-              </SelectTrigger>
-              <SelectContent>
-                {LEVEL_OPTIONS.map((o) => (
-                  <SelectItem key={o.value} value={o.value}>
-                    {o.label}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-            <Select value={discordFilter} onValueChange={setDiscordFilter}>
-              <SelectTrigger className="w-[140px]">
-                <SelectValue placeholder="Discord" />
-              </SelectTrigger>
-              <SelectContent>
-                {DISCORD_OPTIONS.map((o) => (
-                  <SelectItem key={o.value} value={o.value}>
-                    {o.label}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-            <Select value={transportFilter} onValueChange={setTransportFilter}>
-              <SelectTrigger className="w-[140px]">
-                <SelectValue placeholder="Airport" />
-              </SelectTrigger>
-              <SelectContent>
-                {TRANSPORT_OPTIONS.map((o) => (
-                  <SelectItem key={o.value} value={o.value}>
-                    {o.label}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
+          <div className="flex flex-wrap items-center gap-4">
+            <div className="flex flex-col gap-1.5">
+              <Label className="text-xs text-muted-foreground">Level of study</Label>
+              <Select value={levelFilter} onValueChange={setLevelFilter}>
+                <SelectTrigger className="w-[180px]">
+                  <SelectValue placeholder="All levels" />
+                </SelectTrigger>
+                <SelectContent>
+                  {LEVEL_OPTIONS.map((o) => (
+                    <SelectItem key={o.value} value={o.value}>
+                      {o.label}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+            <div className="flex flex-col gap-1.5">
+              <Label className="text-xs text-muted-foreground">Airport transport</Label>
+              <Select value={transportFilter} onValueChange={setTransportFilter}>
+                <SelectTrigger className="w-[140px]">
+                  <SelectValue placeholder="All" />
+                </SelectTrigger>
+                <SelectContent>
+                  {TRANSPORT_OPTIONS.map((o) => (
+                    <SelectItem key={o.value} value={o.value}>
+                      {o.label}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+            <div className="flex flex-col gap-1.5">
+              <Label className="text-xs text-muted-foreground">Check-in</Label>
+              <Select value={checkInFilter} onValueChange={setCheckInFilter}>
+                <SelectTrigger className="w-[140px]">
+                  <SelectValue placeholder="All" />
+                </SelectTrigger>
+                <SelectContent>
+                  {CHECK_IN_OPTIONS.map((o) => (
+                    <SelectItem key={o.value} value={o.value}>
+                      {o.label}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
           </div>
         </div>
 
@@ -214,39 +223,36 @@ const RegistrationsTable = () => {
                 <TableHead className="text-primary font-semibold">Last name</TableHead>
                 <TableHead className="text-primary font-semibold">Phone</TableHead>
                 <TableHead className="text-primary font-semibold">School</TableHead>
-                <TableHead className="text-primary font-semibold text-center">Discord</TableHead>
-                <TableHead className="w-[100px] text-primary font-semibold text-right">Actions</TableHead>
+                <TableHead className="text-primary font-semibold text-center w-[120px]">Check-in</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
               {data.map((r) => (
-                <TableRow key={r.id} className="border-border">
+                <TableRow
+                  key={r.id}
+                  className="border-border cursor-pointer hover:bg-muted/50"
+                  onClick={() => {
+                    setSelectedRegistration(r);
+                    setDetailOpen(true);
+                  }}
+                >
                   <TableCell className="font-medium">{r.email}</TableCell>
                   <TableCell>{r.first_name}</TableCell>
                   <TableCell>{r.last_name}</TableCell>
                   <TableCell className="text-muted-foreground">{r.phone_number}</TableCell>
                   <TableCell>{r.school}</TableCell>
                   <TableCell className="text-center">
-                    <Badge
-                      variant={r.discord_joined ? "default" : "secondary"}
-                      className={r.discord_joined ? "bg-primary" : ""}
-                    >
-                      {r.discord_joined ? "Yes" : "No"}
-                    </Badge>
-                  </TableCell>
-                  <TableCell className="text-right">
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      className="text-primary hover:bg-primary/10"
-                      onClick={() => {
-                        setSelectedRegistration(r);
-                        setDetailOpen(true);
-                      }}
-                    >
-                      <Eye className="h-4 w-4 mr-1" />
-                      View more
-                    </Button>
+                    {!!r.checked_in ? (
+                      <span className="inline-flex items-center gap-1.5 rounded-full bg-emerald-500/15 px-2.5 py-1 text-xs font-medium text-emerald-700 dark:text-emerald-400 ring-1 ring-emerald-500/20">
+                        <CheckCircle2 className="h-3.5 w-3.5 shrink-0" />
+                        Yes
+                      </span>
+                    ) : (
+                      <span className="inline-flex items-center gap-1.5 rounded-full bg-muted px-2.5 py-1 text-xs font-medium text-muted-foreground">
+                        <Circle className="h-3.5 w-3.5 shrink-0" />
+                        No
+                      </span>
+                    )}
                   </TableCell>
                 </TableRow>
               ))}
@@ -317,6 +323,12 @@ const RegistrationsTable = () => {
         registration={selectedRegistration}
         open={detailOpen}
         onOpenChange={setDetailOpen}
+        onRegistrationUpdated={(updated) => {
+          setSelectedRegistration(updated);
+          setData((prev) =>
+            prev.map((row) => (row.id === updated.id ? updated : row))
+          );
+        }}
       />
     </div>
   );

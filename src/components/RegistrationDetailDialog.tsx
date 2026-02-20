@@ -1,4 +1,6 @@
+import { useState } from "react";
 import type { Tables } from "@/integrations/supabase/types";
+import { supabase } from "@/integrations/supabase/client";
 import {
   Dialog,
   DialogContent,
@@ -6,6 +8,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { formatRole } from "@/lib/constants";
 import {
@@ -19,7 +22,11 @@ import {
   FileText,
   CheckCircle2,
   XCircle,
+  LogIn,
+  Loader2,
+  Clock,
 } from "lucide-react";
+import { format } from "date-fns";
 
 type Registration = Tables<"registrations">;
 
@@ -70,16 +77,40 @@ interface RegistrationDetailDialogProps {
   registration: Registration | null;
   open: boolean;
   onOpenChange: (open: boolean) => void;
+  onRegistrationUpdated?: (updated: Registration) => void;
 }
 
 export function RegistrationDetailDialog({
   registration,
   open,
   onOpenChange,
+  onRegistrationUpdated,
 }: RegistrationDetailDialogProps) {
+  const [checkingIn, setCheckingIn] = useState(false);
+
   if (!registration) return null;
 
   const r = registration;
+
+  const handleCheckIn = async () => {
+    if (!!r.checked_in) return;
+    setCheckingIn(true);
+    try {
+      const { data, error } = await supabase
+        .from("registrations")
+        .update({
+          checked_in: true,
+          checked_in_at: new Date().toISOString(),
+        })
+        .eq("id", r.id)
+        .select()
+        .single();
+      if (error) throw error;
+      if (data) onRegistrationUpdated?.(data as Registration);
+    } finally {
+      setCheckingIn(false);
+    }
+  };
   const dietary = r.dietary_restrictions?.filter((x) => x && x !== "none") ?? [];
   const country = r.country_other && r.country_of_residence === "Other"
     ? r.country_other
@@ -94,6 +125,42 @@ export function RegistrationDetailDialog({
             {r.first_name} {r.last_name}
           </DialogTitle>
           <p className="text-sm text-muted-foreground">{r.email}</p>
+          <div className="flex flex-wrap items-center gap-3 pt-2">
+            <Badge
+              variant={!!r.checked_in ? "default" : "secondary"}
+              className={!!r.checked_in ? "bg-primary" : ""}
+            >
+              {r.checked_in ? (
+                <>
+                  <CheckCircle2 className="mr-1 h-3 w-3" />
+                  Checked in
+                </>
+              ) : (
+                "Not checked in"
+              )}
+            </Badge>
+            {r.checked_in_at && (
+              <span className="flex items-center gap-1.5 text-xs text-muted-foreground">
+                <Clock className="h-3.5 w-3.5" />
+                {format(new Date(r.checked_in_at), "PPp")}
+              </span>
+            )}
+            <Button
+              size="sm"
+              disabled={!!r.checked_in || checkingIn}
+              onClick={handleCheckIn}
+              className="ml-auto"
+            >
+              {checkingIn ? (
+                <Loader2 className="h-4 w-4 animate-spin" />
+              ) : (
+                <>
+                  <LogIn className="h-4 w-4 mr-1.5" />
+                  Check in
+                </>
+              )}
+            </Button>
+          </div>
         </DialogHeader>
         <ScrollArea className="h-[60vh] max-h-[calc(90vh-140px)]">
           <div className="space-y-6 px-6 py-4">

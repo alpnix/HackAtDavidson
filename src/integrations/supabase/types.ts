@@ -50,6 +50,8 @@ export type Database = {
           age: number
           airport_transportation: string
           allergies_detail: string | null
+          checked_in: boolean
+          checked_in_at: string | null
           country_of_residence: string
           country_other: string | null
           created_at: string
@@ -77,6 +79,8 @@ export type Database = {
           age: number
           airport_transportation: string
           allergies_detail?: string | null
+          checked_in?: boolean
+          checked_in_at?: string | null
           country_of_residence: string
           country_other?: string | null
           created_at?: string
@@ -104,6 +108,8 @@ export type Database = {
           age?: number
           airport_transportation?: string
           allergies_detail?: string | null
+          checked_in?: boolean
+          checked_in_at?: string | null
           country_of_residence?: string
           country_other?: string | null
           created_at?: string
