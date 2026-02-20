@@ -26,11 +26,50 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from "@/components/ui/pagination";
-import { Loader2, Search, CheckCircle2, Circle } from "lucide-react";
+import { Loader2, Search, CheckCircle2, Circle, Download, Columns } from "lucide-react";
 import { RegistrationDetailDialog } from "@/components/RegistrationDetailDialog";
+import { AdminRegisterDialog } from "@/components/AdminRegisterDialog";
 import { Label } from "@/components/ui/label";
+import { Button } from "@/components/ui/button";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import { Checkbox } from "@/components/ui/checkbox";
+import { toast } from "sonner";
+import { format } from "date-fns";
 
 type Registration = Tables<"registrations">;
+
+const COLUMN_OPTIONS: { id: keyof Registration; label: string }[] = [
+  { id: "email", label: "Email" },
+  { id: "first_name", label: "First name" },
+  { id: "last_name", label: "Last name" },
+  { id: "phone_number", label: "Phone" },
+  { id: "school", label: "School" },
+  { id: "level_of_study", label: "Level of study" },
+  { id: "country_of_residence", label: "Country" },
+  { id: "age", label: "Age" },
+  { id: "tshirt_size", label: "T-shirt size" },
+  { id: "airport_transportation", label: "Airport transport" },
+  { id: "checked_in", label: "Check-in" },
+  { id: "checked_in_at", label: "Checked in at" },
+  { id: "created_at", label: "Created at" },
+  { id: "dietary_restrictions", label: "Dietary" },
+  { id: "allergies_detail", label: "Allergies" },
+  { id: "other_accommodations", label: "Accommodations" },
+  { id: "additional_notes", label: "Notes" },
+];
+
+const DEFAULT_COLUMNS: (keyof Registration)[] = [
+  "email",
+  "first_name",
+  "last_name",
+  "phone_number",
+  "school",
+  "checked_in",
+];
 
 const PAGE_SIZE = 10;
 
@@ -72,6 +111,16 @@ const RegistrationsTable = () => {
   const [error, setError] = useState<string | null>(null);
   const [detailOpen, setDetailOpen] = useState(false);
   const [selectedRegistration, setSelectedRegistration] = useState<Registration | null>(null);
+  const [exporting, setExporting] = useState(false);
+  const [selectedColumns, setSelectedColumns] = useState<(keyof Registration)[]>(() => [...DEFAULT_COLUMNS]);
+
+  const toggleColumn = useCallback((id: keyof Registration) => {
+    setSelectedColumns((prev) => {
+      const next = prev.includes(id) ? prev.filter((c) => c !== id) : [...prev, id];
+      if (next.length === 0) return prev;
+      return next;
+    });
+  }, []);
 
   useEffect(() => {
     const t = setTimeout(() => setSearchQuery(searchInput.trim()), 300);
@@ -142,6 +191,75 @@ const RegistrationsTable = () => {
     (checkInFilter && checkInFilter !== "all")
   );
 
+  const buildFilteredQuery = useCallback(() => {
+    let q = supabase
+      .from("registrations")
+      .select("*")
+      .order("created_at", { ascending: false });
+    if (searchQuery) {
+      const term = `%${searchQuery}%`;
+      const words = searchQuery.trim().split(/\s+/).filter(Boolean);
+      const orParts = [
+        `email.ilike.${term}`,
+        `first_name.ilike.${term}`,
+        `last_name.ilike.${term}`,
+        `school.ilike.${term}`,
+      ];
+      if (words.length >= 2) {
+        const w1 = `%${words[0]}%`;
+        const w2 = `%${words[1]}%`;
+        orParts.push(
+          `and(first_name.ilike.${w1},last_name.ilike.${w2})`,
+          `and(first_name.ilike.${w2},last_name.ilike.${w1})`
+        );
+      }
+      q = q.or(orParts.join(","));
+    }
+    if (levelFilter && levelFilter !== "all") q = q.eq("level_of_study", levelFilter);
+    if (transportFilter && transportFilter !== "all") q = q.eq("airport_transportation", transportFilter);
+    if (checkInFilter && checkInFilter !== "all") q = q.eq("checked_in", checkInFilter === "true");
+    return q;
+  }, [searchQuery, levelFilter, transportFilter, checkInFilter]);
+
+  const exportToCsv = useCallback(async () => {
+    setExporting(true);
+    try {
+      const q = buildFilteredQuery();
+      const { data: rows, error: err } = await q.range(0, 9999);
+      if (err) throw err;
+      const list = rows ?? [];
+      const csvEscape = (v: unknown): string => {
+        if (v == null) return "";
+        const s = Array.isArray(v) ? v.join("; ") : String(v);
+        if (s.includes(",") || s.includes('"') || s.includes("\n")) return `"${s.replace(/"/g, '""')}"`;
+        return s;
+      };
+      const headers = selectedColumns;
+      const csvRows = [
+        headers.join(","),
+        ...list.map((r) =>
+          headers.map((h) => {
+            const val = r[h];
+            return csvEscape(val);
+          }).join(",")
+        ),
+      ];
+      const csv = csvRows.join("\n");
+      const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = `registrations-${new Date().toISOString().slice(0, 10)}.csv`;
+      a.click();
+      URL.revokeObjectURL(url);
+      toast.success(`Exported ${list.length} registration${list.length !== 1 ? "s" : ""} to CSV.`);
+    } catch (e) {
+      toast.error(e instanceof Error ? e.message : "Export failed");
+    } finally {
+      setExporting(false);
+    }
+  }, [buildFilteredQuery, selectedColumns]);
+
   return (
     <div className="space-y-4">
       <div className="flex flex-col gap-4">
@@ -204,12 +322,55 @@ const RegistrationsTable = () => {
           </div>
         </div>
 
-        <div className="flex flex-wrap items-center gap-4 rounded-lg border border-border bg-muted/30 px-4 py-3">
+        <div className="flex flex-wrap items-center justify-between gap-4 rounded-lg border border-border bg-muted/30 px-4 py-3">
           <div className="flex items-baseline gap-2">
             <span className="text-2xl font-bold text-primary">{total}</span>
             <span className="text-sm text-muted-foreground">
               {hasFilters ? "matching" : "total"} registration{total !== 1 ? "s" : ""}
             </span>
+          </div>
+          <div className="flex items-center gap-2">
+            <Popover>
+              <PopoverTrigger asChild>
+                <Button variant="outline" size="sm" className="gap-2">
+                  <Columns className="h-4 w-4" />
+                  Columns
+                </Button>
+              </PopoverTrigger>
+              <PopoverContent className="w-56 p-3" align="end">
+                <p className="text-xs font-medium text-muted-foreground mb-2">Select fields to display (min 1)</p>
+                <div className="space-y-2 max-h-[280px] overflow-y-auto">
+                  {COLUMN_OPTIONS.map((col) => (
+                    <label
+                      key={col.id}
+                      className="flex items-center gap-2 cursor-pointer text-sm"
+                    >
+                      <Checkbox
+                        checked={selectedColumns.includes(col.id)}
+                        onCheckedChange={() => toggleColumn(col.id)}
+                        disabled={selectedColumns.includes(col.id) && selectedColumns.length === 1}
+                      />
+                      {col.label}
+                    </label>
+                  ))}
+                </div>
+              </PopoverContent>
+            </Popover>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={exportToCsv}
+              disabled={loading || exporting}
+              className="gap-2"
+            >
+              {exporting ? (
+                <Loader2 className="h-4 w-4 animate-spin" />
+              ) : (
+                <Download className="h-4 w-4" />
+              )}
+              Export CSV
+            </Button>
+            <AdminRegisterDialog onSuccess={fetchRegistrations} />
           </div>
         </div>
       </div>
@@ -231,12 +392,18 @@ const RegistrationsTable = () => {
           <Table>
             <TableHeader>
               <TableRow className="border-border hover:bg-transparent">
-                <TableHead className="text-primary font-semibold">Email</TableHead>
-                <TableHead className="text-primary font-semibold">First name</TableHead>
-                <TableHead className="text-primary font-semibold">Last name</TableHead>
-                <TableHead className="text-primary font-semibold">Phone</TableHead>
-                <TableHead className="text-primary font-semibold">School</TableHead>
-                <TableHead className="text-primary font-semibold text-center w-[120px]">Check-in</TableHead>
+                {selectedColumns.map((colId) => {
+                  const col = COLUMN_OPTIONS.find((c) => c.id === colId);
+                  const isCheckIn = colId === "checked_in";
+                  return (
+                    <TableHead
+                      key={colId}
+                      className={`text-primary font-semibold ${isCheckIn ? "text-center w-[120px]" : ""}`}
+                    >
+                      {col?.label ?? colId}
+                    </TableHead>
+                  );
+                })}
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -249,24 +416,40 @@ const RegistrationsTable = () => {
                     setDetailOpen(true);
                   }}
                 >
-                  <TableCell className="font-medium">{r.email}</TableCell>
-                  <TableCell>{r.first_name}</TableCell>
-                  <TableCell>{r.last_name}</TableCell>
-                  <TableCell className="text-muted-foreground">{r.phone_number}</TableCell>
-                  <TableCell>{r.school}</TableCell>
-                  <TableCell className="text-center">
-                    {!!r.checked_in ? (
-                      <span className="inline-flex items-center gap-1.5 rounded-full bg-emerald-500/15 px-2.5 py-1 text-xs font-medium text-emerald-700 dark:text-emerald-400 ring-1 ring-emerald-500/20">
-                        <CheckCircle2 className="h-3.5 w-3.5 shrink-0" />
-                        Yes
-                      </span>
-                    ) : (
-                      <span className="inline-flex items-center gap-1.5 rounded-full bg-muted px-2.5 py-1 text-xs font-medium text-muted-foreground">
-                        <Circle className="h-3.5 w-3.5 shrink-0" />
-                        No
-                      </span>
-                    )}
-                  </TableCell>
+                  {selectedColumns.map((colId) => {
+                    const val = r[colId];
+                    const isCheckIn = colId === "checked_in";
+                    const isDate = colId === "checked_in_at" || colId === "created_at";
+                    const isArray = Array.isArray(val);
+                    let content: React.ReactNode;
+                    if (isCheckIn) {
+                      content = !!val ? (
+                        <span className="inline-flex items-center gap-1.5 rounded-full bg-emerald-500/15 px-2.5 py-1 text-xs font-medium text-emerald-700 dark:text-emerald-400 ring-1 ring-emerald-500/20">
+                          <CheckCircle2 className="h-3.5 w-3.5 shrink-0" />
+                          Yes
+                        </span>
+                      ) : (
+                        <span className="inline-flex items-center gap-1.5 rounded-full bg-muted px-2.5 py-1 text-xs font-medium text-muted-foreground">
+                          <Circle className="h-3.5 w-3.5 shrink-0" />
+                          No
+                        </span>
+                      );
+                    } else if (isDate && val) {
+                      content = format(new Date(val as string), "PPp");
+                    } else if (isArray && val) {
+                      content = (val as string[]).join(", ");
+                    } else {
+                      content = val != null && val !== "" ? String(val) : "—";
+                    }
+                    return (
+                      <TableCell
+                        key={colId}
+                        className={colId === "email" ? "font-medium" : isCheckIn ? "text-center" : ""}
+                      >
+                        {content}
+                      </TableCell>
+                    );
+                  })}
                 </TableRow>
               ))}
             </TableBody>
