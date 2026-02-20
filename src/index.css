@@ -48,6 +48,14 @@ All colors MUST be HSL.
     --sidebar-border: 40 15% 80%;
     --sidebar-ring: 69 12% 38%;
 
+    /* Chart palette (from primary + accent) */
+    --chart-1: 69 12% 38%;
+    --chart-2: 69 12% 48%;
+    --chart-3: 69 12% 28%;
+    --chart-4: 38 100% 62%;
+    --chart-5: 38 90% 52%;
+    --chart-6: 40 15% 55%;
+
     /* Custom design tokens */
     --hero-gradient: linear-gradient(135deg, hsl(69 12% 38%), hsl(69 12% 48%));
     --geometric-shape: hsl(69 12% 38% / 0.15);
@@ -91,6 +99,13 @@ All colors MUST be HSL.
     --sidebar-accent-foreground: 45 20% 95%;
     --sidebar-border: 40 15% 25%;
     --sidebar-ring: 69 12% 45%;
+
+    --chart-1: 69 12% 45%;
+    --chart-2: 69 12% 55%;
+    --chart-3: 69 12% 35%;
+    --chart-4: 38 100% 65%;
+    --chart-5: 38 90% 55%;
+    --chart-6: 40 15% 45%;
   }
 }
 

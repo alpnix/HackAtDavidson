@@ -29,6 +29,7 @@ const App = () => (
             <Route path="/login" element={<Login />} />
             <Route path="/dashboard" element={<ProtectedRoute><DashboardLayout /></ProtectedRoute>}>
               <Route index element={<Dashboard />} />
+              <Route path="registrations" element={<Dashboard />} />
               <Route path="blog" element={<Dashboard />} />
               <Route path="forms" element={<Dashboard />} />
               <Route path="forms/:id" element={<FormDetailPage />} />

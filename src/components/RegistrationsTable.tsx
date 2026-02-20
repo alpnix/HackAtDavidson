@@ -1,4 +1,5 @@
 import { useEffect, useState, useCallback } from "react";
+import { useSearchParams } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import type { Tables } from "@/integrations/supabase/types";
 import { Input } from "@/components/ui/input";
@@ -98,15 +99,21 @@ const CHECK_IN_OPTIONS = [
   { value: "false", label: "Not checked in" },
 ];
 
+const PARAM_Q = "q";
+const PARAM_LEVEL = "level";
+const PARAM_TRANSPORT = "transport";
+const PARAM_CHECK_IN = "checkIn";
+
 const RegistrationsTable = () => {
+  const [searchParams, setSearchParams] = useSearchParams();
   const [data, setData] = useState<Registration[]>([]);
   const [total, setTotal] = useState(0);
   const [page, setPage] = useState(1);
-  const [searchInput, setSearchInput] = useState("");
-  const [searchQuery, setSearchQuery] = useState("");
-  const [levelFilter, setLevelFilter] = useState("all");
-  const [transportFilter, setTransportFilter] = useState("all");
-  const [checkInFilter, setCheckInFilter] = useState("all");
+  const [searchInput, setSearchInput] = useState(() => searchParams.get(PARAM_Q) ?? "");
+  const [searchQuery, setSearchQuery] = useState(() => searchParams.get(PARAM_Q) ?? "");
+  const [levelFilter, setLevelFilter] = useState(() => searchParams.get(PARAM_LEVEL) ?? "all");
+  const [transportFilter, setTransportFilter] = useState(() => searchParams.get(PARAM_TRANSPORT) ?? "all");
+  const [checkInFilter, setCheckInFilter] = useState(() => searchParams.get(PARAM_CHECK_IN) ?? "all");
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [detailOpen, setDetailOpen] = useState(false);
@@ -122,11 +129,34 @@ const RegistrationsTable = () => {
     });
   }, []);
 
+  // Sync URL -> state (on load and when URL changes e.g. back/forward)
   useEffect(() => {
-    const t = setTimeout(() => setSearchQuery(searchInput.trim()), 300);
-    return () => clearTimeout(t);
-  }, [searchInput]);
+    const q = searchParams.get(PARAM_Q) ?? "";
+    const level = searchParams.get(PARAM_LEVEL) ?? "all";
+    const transport = searchParams.get(PARAM_TRANSPORT) ?? "all";
+    const checkIn = searchParams.get(PARAM_CHECK_IN) ?? "all";
+    setSearchInput(q);
+    setSearchQuery(q);
+    setLevelFilter(level);
+    setTransportFilter(transport);
+    setCheckInFilter(checkIn);
+  }, [searchParams]);
 
+  // Debounce search and push to URL (sync effect will update searchQuery from URL)
+  useEffect(() => {
+    const t = setTimeout(() => {
+      const trimmed = searchInput.trim();
+      setSearchParams((prev) => {
+        const p = new URLSearchParams(prev);
+        if (trimmed) p.set(PARAM_Q, trimmed);
+        else p.delete(PARAM_Q);
+        return p;
+      });
+    }, 300);
+    return () => clearTimeout(t);
+  }, [searchInput, setSearchParams]);
+
+  // Reset to page 1 when filters change
   useEffect(() => {
     setPage(1);
   }, [searchQuery, levelFilter, transportFilter, checkInFilter]);
@@ -276,7 +306,17 @@ const RegistrationsTable = () => {
           <div className="flex flex-wrap items-center gap-4">
             <div className="flex flex-col gap-1.5">
               <Label className="text-xs text-muted-foreground">Level of study</Label>
-              <Select value={levelFilter} onValueChange={setLevelFilter}>
+              <Select
+                value={levelFilter}
+                onValueChange={(v) =>
+                  setSearchParams((prev) => {
+                    const p = new URLSearchParams(prev);
+                    if (v === "all") p.delete(PARAM_LEVEL);
+                    else p.set(PARAM_LEVEL, v);
+                    return p;
+                  })
+                }
+              >
                 <SelectTrigger className="w-[180px]">
                   <SelectValue placeholder="All levels" />
                 </SelectTrigger>
@@ -291,7 +331,17 @@ const RegistrationsTable = () => {
             </div>
             <div className="flex flex-col gap-1.5">
               <Label className="text-xs text-muted-foreground">Airport transport</Label>
-              <Select value={transportFilter} onValueChange={setTransportFilter}>
+              <Select
+                value={transportFilter}
+                onValueChange={(v) =>
+                  setSearchParams((prev) => {
+                    const p = new URLSearchParams(prev);
+                    if (v === "all") p.delete(PARAM_TRANSPORT);
+                    else p.set(PARAM_TRANSPORT, v);
+                    return p;
+                  })
+                }
+              >
                 <SelectTrigger className="w-[140px]">
                   <SelectValue placeholder="All" />
                 </SelectTrigger>
@@ -306,7 +356,17 @@ const RegistrationsTable = () => {
             </div>
             <div className="flex flex-col gap-1.5">
               <Label className="text-xs text-muted-foreground">Check-in</Label>
-              <Select value={checkInFilter} onValueChange={setCheckInFilter}>
+              <Select
+                value={checkInFilter}
+                onValueChange={(v) =>
+                  setSearchParams((prev) => {
+                    const p = new URLSearchParams(prev);
+                    if (v === "all") p.delete(PARAM_CHECK_IN);
+                    else p.set(PARAM_CHECK_IN, v);
+                    return p;
+                  })
+                }
+              >
                 <SelectTrigger className="w-[140px]">
                   <SelectValue placeholder="All" />
                 </SelectTrigger>

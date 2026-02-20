@@ -18,7 +18,7 @@ import {
   SidebarMenuItem,
   SidebarProvider,
 } from "@/components/ui/sidebar";
-import { LayoutDashboard, LogOut, User, FileText, FormInput } from "lucide-react";
+import { BarChart3, Users, LogOut, User, FileText, FormInput } from "lucide-react";
 
 export default function DashboardLayout() {
   const navigate = useNavigate();
@@ -80,7 +80,17 @@ export default function DashboardLayout() {
                   <NavLink to="/dashboard" end>
                     {({ isActive }) => (
                       <SidebarMenuButton isActive={isActive}>
-                        <LayoutDashboard className="h-4 w-4" />
+                        <BarChart3 className="h-4 w-4" />
+                        <span>Statistics</span>
+                      </SidebarMenuButton>
+                    )}
+                  </NavLink>
+                </SidebarMenuItem>
+                <SidebarMenuItem>
+                  <NavLink to="/dashboard/registrations">
+                    {({ isActive }) => (
+                      <SidebarMenuButton isActive={isActive}>
+                        <Users className="h-4 w-4" />
                         <span>Registrations</span>
                       </SidebarMenuButton>
                     )}
